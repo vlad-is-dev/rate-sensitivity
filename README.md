@@ -2,6 +2,8 @@
 
 An interactive tool that shows what a move in interest rates does to a company: its debt expense, the cash left for shareholders, and what the equity is worth.
 
+**Live demo: [rate-sensitivity.vercel.app](https://rate-sensitivity.vercel.app/)**
+
 Pick one of six real companies or type in your own numbers, drag the ruler to shock rates by anything from −200 to +300 basis points, and the page recalculates.
 
 ![Rate Sensitivity showing a +100 bp shock applied to Carnival](docs/screenshot.png)
