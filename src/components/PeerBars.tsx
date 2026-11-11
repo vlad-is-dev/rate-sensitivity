@@ -18,6 +18,8 @@ interface Props {
   onSelect: (id: string) => void;
 }
 
+const round2 = (x: number) => Math.round(x * 100) / 100;
+
 /** Diverging horizontal bars: one row per company, zero in the middle. */
 export function PeerBars({ rows, selectedId, onSelect }: Props) {
   const extent = Math.max(0.05, ...rows.map((r) => (Number.isFinite(r.equityChange) ? Math.abs(r.equityChange) : 0)));
@@ -41,7 +43,10 @@ export function PeerBars({ rows, selectedId, onSelect }: Props) {
       <tbody>
         {rows.map((r) => {
           const valid = Number.isFinite(r.equityChange);
-          const half = valid ? (Math.abs(r.equityChange) / extent) * 34 : 0;
+          // Rounded so the server-rendered style matches what the browser
+          // serialises; otherwise hydration reports an attribute mismatch.
+          const half = valid ? round2((Math.abs(r.equityChange) / extent) * 34) : 0;
+          const labelOffset = round2(50 + half);
           const negative = r.equityChange < 0;
           return (
             <tr key={r.id} className={r.id === selectedId ? "is-selected" : undefined}>
@@ -62,8 +67,8 @@ export function PeerBars({ rows, selectedId, onSelect }: Props) {
                     className="peers-bar-value"
                     style={
                       negative
-                        ? { right: `calc(50% + ${half}% + 6px)` }
-                        : { left: `calc(50% + ${half}% + 6px)` }
+                        ? { right: `calc(${labelOffset}% + 6px)` }
+                        : { left: `calc(${labelOffset}% + 6px)` }
                     }
                   >
                     {valid ? pct(r.equityChange, 0, { sign: true }) : "n/a"}
